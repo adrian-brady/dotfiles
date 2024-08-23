@@ -1,0 +1,3 @@
+[submodule "apprunner"]
+	path = hammerspoon/.hammerspoon
+	url = https://github.com/adrian-brady/hammerspoon-apprunner.git
