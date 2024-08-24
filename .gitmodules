@@ -1,3 +1,6 @@
 [submodule "apprunner"]
 	path = hammerspoon/.hammerspoon
 	url = https://github.com/adrian-brady/hammerspoon-apprunner.git
+[submodule "neovim"]
+	path = nvim/.config/nvim
+	url = https://github.com/adrian-brady/nvim.git
