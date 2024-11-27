@@ -1,0 +1,4 @@
+#!/bin/sh
+# Prints git branch state
+
+git log --graph --all --decorate --simplify-by-decoration --oneline
