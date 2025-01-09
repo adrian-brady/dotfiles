@@ -13,6 +13,7 @@ function module.apply_font(config)
 		"Flog Symbols",
 	})
 	config.font_size = size
+	config.custom_block_glyphs = false
 end
 
 return module
