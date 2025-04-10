@@ -26,8 +26,11 @@ fi
 compinit -i -d "$ZSH/.zcompdump-$ZSH_VERSION" # -i: insecure dirs, -d: specify dump file
 
 # Source other plugins AFTER compinit if they interact with completion or zle
-source $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+plugins=( 
+    git
+    fast-syntax-highlighting
+    zsh-autosuggestions
+)
 
 ### ------ Color Config ------
 
