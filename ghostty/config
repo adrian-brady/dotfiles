@@ -1,0 +1,13 @@
+theme = tokyonight_moon
+font-family = "FiraCode Mono"
+shell-integration = zsh
+
+window-save-state = always
+
+mouse-hide-while-typing = true
+cursor-style = bar
+
+macos-titlebar-style = hidden
+macos-option-as-alt = true
+macos-icon = custom-style
+macos-icon-frame = plastic
