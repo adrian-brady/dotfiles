@@ -26,12 +26,6 @@ fi
 compinit -i -d "$ZSH/.zcompdump-$ZSH_VERSION" # -i: insecure dirs, -d: specify dump file
 
 # Source other plugins AFTER compinit if they interact with completion or zle
-plugins=( 
-    git
-    fast-syntax-highlighting
-    zsh-autosuggestions
-)
-
 ### ------ Color Config ------
 
 local color00='#282828'
@@ -54,32 +48,19 @@ local color0F='#d65d0e'
 ### ------ PATH, EDITOR, ALIASES, SCRIPTS, KEYBINDS ------
 export PATH=$HOME/bin:/opt/homebrew/bin:/usr/local/bin:$PATH
 export PATH=$PATH:$GOPATH/bin
-export PATH="$PATH:/Users/adrianbrady/.local/bin" # Duplicated? Check if needed twice
 export PATH=$PATH:/Users/adrianbrady/bin # Already added via $HOME/bin?
-export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.12/bin
-export PATH=$PATH:/opt/local/bin:/opt/local/sbin
-export PATH=$PATH:/Library/Frameworks/Python.framework/Versions/3.10/bin # Check if needed alongside 3.12
 # Homebrew paths are likely covered by /opt/homebrew/bin, but keep if specific sbin needed
-export PATH=$PATH:/opt/homebrew/sbin
 # System paths usually come last or are handled by default login profiles
 # export PATH=$PATH:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:... etc. (Review if needed)
-export PATH=$PATH:/Library/TeX/texbin
 export PATH=$PATH:/usr/local/share/dotnet:~/.dotnet/tools
 export PATH=$PATH:/usr/local/opt/llvm/bin
 export PATH=$PATH:/Users/adrianbrady/.cargo/bin
 export PATH=$PATH:/Users/adrianbrady/go/bin # Duplicated? Check if needed twice
 export PATH=$PATH:/opt/cross/bin
 export PATH=$PATH:/Users/adrianbrady/Scripts
-export PATH=$PATH:/opt/homebrew/lib # Usually for libraries, not executables
-export PATH=$PATH:/opt/homebrew/include # Usually for headers, not executables
-export PATH=$PATH:/usr/local/opt/include # Usually for headers, not executables
-export PATH=$PATH:/usr/local/opt/lib # Usually for libraries, not executables
-export PATH=$PATH:/opt/local/lib # Usually for libraries, not executables
 export PATH=$PATH:/Users/adrianbrady/.config/scripts/git-scripts
 export PATH="/Users/adrianbrady/git-repos/git-fuzzy/bin:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
-export PATH="$PATH:/usr/local/texlive/" # Check if this path is correct/needed
-export PATH=$PATH:/nix/var/nix/profiles/default/bin # If using Nix
 
 # Ensure Ruby paths are added correctly
 if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
@@ -96,22 +77,23 @@ export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init --path)" # Use --path for PATH modification only first
 eval "$(pyenv init - zsh)"  # Then init the shell integration
 
-# SDKMAN Init
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
-
 # Other Exports
 export EDITOR='nvim'
 export VISUAL='nvim'
 export GOPATH=$HOME/go
-export OPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl@3
-export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:$(brew --prefix qt@5)
-export PATH=$PATH:$(brew --prefix qt@5)/bin # Add Qt bin if needed
 
 # Broot Init (Source the correct shell version)
 if command -v broot >/dev/null 2>&1; then
   source <(broot --print-shell-function zsh)
 fi
+
+plugins=( 
+    git
+	fast-syntax-highlighting
+    zsh-autosuggestions
+	fzf-tab
+)
+source "$ZSH/oh-my-zsh.sh"
 
 # Aliases
 alias lg="lazygit"
@@ -129,15 +111,13 @@ alias zshrc="nvim ~/dotfiles/zsh/.zshrc" # Adjust path if needed
 [[ -f ~/.config/zsh/.zsh-alias ]] && source ~/.config/zsh/.zsh-alias
 
 # Custom Keybinds / ZLE Widgets
-tmux_sessionizer() { ~/Scripts/tmux-sessionizer.sh }
 zellij_sessionizer() { ~/Scripts/zellij-smart-sessionizer }
-zle -N tmux_sessionizer
 zle -N zellij_sessionizer
-bindkey '^f' tmux_sessionizer
 bindkey '^p' history-search-backward # Default Zsh keybind? Check if needed
 bindkey '^n' history-search-forward  # Default Zsh keybind? Check if needed
 # Source custom keybind files if they exist
 [[ -f ~/.config/zsh/.zsh-keys ]] && source ~/.config/zsh/.zsh-keys
+
 
 ### ------ FZF Config ------
 
@@ -237,16 +217,6 @@ fsw() { # Similar to fbr, maybe consolidate?
   branch=$(echo "$branches" | fzf +m --preview="git log --oneline --graph --color=always --abbrev-commit {1}") && # Preview based on first field (branch name)
   git switch $(echo "$branch" | awk '{print $1}' | sed "s/^\* //") # Handle '*' for current branch
 }
-gp() { # Preview diff between selection and HEAD
-  local tags branches target
-  branches=$(git branch -a --color=always --format="%(if)%(HEAD)%(then)%(color:red)%(else)%(color:green)%(end)%(refname:short)%(color:reset)") || return
-  tags=$(git tag --sort=-creatordate --color=always --format="%(color:yellow)%(refname:short)%(color:reset)") || return
-  target=$( (echo "$branches"; echo "$tags") |
-    fzf --no-hscroll --no-multi -n 1 --ansi \
-        --preview="git log --graph --oneline --color=always --abbrev-commit HEAD..{}" \
-        --preview-window=down:50%:wrap ) || return
-  git checkout "$target"
-}
 
 # --- FZF CTRL-R Configuration ---
 export FZF_CTRL_R_OPTS=" \
@@ -311,3 +281,8 @@ fi
 
 # --- End of .zshrc ---
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+
+tmux_sessionizer() { ~/Scripts/tmux-sessionizer.sh }
+zle -N tmux_sessionizer
+bindkey '^f' tmux_sessionizer
