@@ -1,0 +1,34 @@
+[ui]
+default-command = "ll"
+paginate = "never"
+
+[user]
+name = "Adrian Brady"
+email = "mail@adrianbrady.com"
+
+[template-aliases]
+'format_short_change_id(id)' = 'id.shortest()'
+
+[aliases]
+tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
+log-recent = ["log", "-r", "recent()"]
+c = ["commit"]
+ci = ["commit", "--interactive"]
+e = ["edit"]
+i = ["git", "init", "--colocate"]
+nb = ["bookmark", "create", "-r @-"] # "new bookmark"
+pull = ["git", "fetch"]
+push = ["git", "push", "--allow-new"]
+r = ["rebase"]
+s = ["squash"]
+si = ["squash", "--interactive"]
+ll = ["log", "--limit", "10"]
+
+[git]
+push-new-bookmarks = true
+ignore-filters = ["lfs"]
+
+[revset-aliases]
+'recent()' = 'committer_date(after:"3 months ago")'
+'closest_bookmark(to)' = 'heads(::to & bookmarks())'
+
